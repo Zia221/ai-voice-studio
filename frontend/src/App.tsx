@@ -1,62 +1,44 @@
-import { useEffect, useState } from "react";
-import api from "./services/api";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-  const [backendStatus, setBackendStatus] = useState("Checking...");
-  const [databaseStatus, setDatabaseStatus] = useState("Checking...");
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
-  useEffect(() => {
-    async function checkServices() {
-      try {
-        const backend = await api.get("/health");
-        setBackendStatus(backend.data.status);
-      } catch {
-        setBackendStatus("Disconnected");
-      }
-
-      try {
-        const database = await api.get("/health/database");
-        setDatabaseStatus(database.data.status);
-      } catch {
-        setDatabaseStatus("Disconnected");
-      }
-    }
-
-    checkServices();
-  }, []);
-
+function ComingSoon({ title }: { title: string }) {
   return (
-    <main className="app">
-      <div className="container">
-        <div className="logo">AI</div>
-
-        <h1>AI Voice Studio</h1>
-
-        <p className="subtitle">
-          Your voice. Your AI. Your conversations.
-        </p>
-
-        <div className="status-card">
-          <h2>System Status</h2>
-
-          <div className="status-row">
-            <span>Backend API</span>
-            <strong>{backendStatus}</strong>
-          </div>
-
-          <div className="status-row">
-            <span>PostgreSQL</span>
-            <strong>{databaseStatus}</strong>
-          </div>
-        </div>
-
-        <p className="footer">
-          AI Voice Studio — Development Environment
-        </p>
-      </div>
-    </main>
+    <div className="placeholder-page">
+      <h1>{title}</h1>
+      <p>This feature will be implemented in an upcoming phase.</p>
+      <a href="/dashboard">Return to dashboard</a>
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/voice-cloning" element={<ComingSoon title="Voice Cloning" />} />
+            <Route path="/text-to-speech" element={<ComingSoon title="Text to Speech" />} />
+            <Route path="/conversation" element={<ComingSoon title="AI Conversation Agent" />} />
+            <Route path="/voice-library" element={<ComingSoon title="Voice Library" />} />
+            <Route path="/history" element={<ComingSoon title="History" />} />
+            <Route path="/settings" element={<ComingSoon title="Settings" />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
