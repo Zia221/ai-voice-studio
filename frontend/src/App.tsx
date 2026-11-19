@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+import VoiceCloning from "./pages/VoiceCloning";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -28,7 +29,7 @@ export default function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/voice-cloning" element={<ComingSoon title="Voice Cloning" />} />
+            <Route path="/voice-cloning" element={<VoiceCloning />} />
             <Route path="/text-to-speech" element={<ComingSoon title="Text to Speech" />} />
             <Route path="/conversation" element={<ComingSoon title="AI Conversation Agent" />} />
             <Route path="/voice-library" element={<ComingSoon title="Voice Library" />} />
